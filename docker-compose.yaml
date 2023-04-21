@@ -1,0 +1,37 @@
+version: "3"
+   
+services:
+    cotizaciones-service:
+        build:
+            context: .
+            dockerfile: dockerfile
+        container_name: cotizaciones-service
+        command: npm run server
+        volumes:
+            - .:/usr/src/app/
+        ports:
+            - "5100:5100"
+
+        depends_on:
+            - mongodb-cotizaciones
+        networks:
+            - landingNet
+
+  
+           
+    mongodb-cotizaciones:
+      image: mongo:latest
+      restart: always
+      environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+      networks:
+          - landingNet      
+
+      volumes:
+          - ./mongo-data:/data/db   
+
+
+networks:
+  landingNet:
+    driver: bridge                
